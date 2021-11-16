@@ -214,8 +214,19 @@ public class RedisServiceImpl implements IRedisService {
             return true;
         } catch (Exception e) {
             log.error("redis ops for key: " + key + " value : " + value + " error, the exception is : " + e.getMessage());
-            return false;
         }
+        return false;
+    }
+
+    @Override
+    public boolean setWithExpireTime(String key, Object value, Long time) {
+        try {
+            redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
+            return true;
+        } catch (Exception e) {
+            log.error("redis ops for key: " + key + " value : " + value + " error, the exception is : " + e.getMessage());
+        }
+        return false;
     }
 
     /**

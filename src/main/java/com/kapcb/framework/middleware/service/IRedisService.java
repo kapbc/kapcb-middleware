@@ -87,6 +87,16 @@ public interface IRedisService {
     boolean set(String key, Object value);
 
     /**
+     * set with expire time
+     *
+     * @param key   String
+     * @param value Object
+     * @param time  Long
+     * @return boolean
+     */
+    boolean setWithExpireTime(String key, Object value, Long time);
+
+    /**
      * multiple set
      *
      * @param keyValueMap Map<String, String>
