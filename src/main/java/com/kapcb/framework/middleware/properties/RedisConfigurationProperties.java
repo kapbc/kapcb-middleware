@@ -15,4 +15,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @ConfigurationProperties(prefix = "kapcb.redis")
 public class RedisConfigurationProperties {
+
+    private Boolean enable = false;
+
 }

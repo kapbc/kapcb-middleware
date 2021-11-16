@@ -7,14 +7,18 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.kapcb.framework.middleware.properties.RedisConfigurationProperties;
 import com.kapcb.framework.middleware.service.IRedisService;
 import com.kapcb.framework.middleware.service.impl.RedisServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -29,10 +33,12 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  * @date 2021/11/12 22:02
  */
 @Slf4j
+@EnableConfigurationProperties(RedisConfigurationProperties.class)
+@ConditionalOnProperty(value = "kapcb.redis.enable", havingValue = "true", matchIfMissing = true)
 public class CustomRedisAutoConfiguration {
 
     @Bean(value = "redisTemplate")
-    @ConditionalOnMissingBean(name = "redisService")
+    @ConditionalOnClass(RedisOperations.class)
     public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
         log.info("kapcb auto configure redis template");
         // 关闭共享连接, 用于动态切换Redis数据库
