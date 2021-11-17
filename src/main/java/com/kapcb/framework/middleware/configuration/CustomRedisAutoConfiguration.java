@@ -40,7 +40,7 @@ public class CustomRedisAutoConfiguration {
     @Bean(value = "redisTemplate")
     @ConditionalOnClass(RedisOperations.class)
     public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
-        log.info("kapcb auto configure redis template");
+        log.info("[ begin to add redis template into spring application context ]");
         // 关闭共享连接, 用于动态切换Redis数据库
         lettuceConnectionFactory.setShareNativeConnection(false);
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
