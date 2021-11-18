@@ -1,6 +1,7 @@
 package com.kapcb.framework.middleware.configuration;
 
 import com.kapcb.framework.middleware.properties.RabbitAutoConfigurationProperties;
+import com.kapcb.framework.middleware.service.impl.RabbitServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -8,6 +9,7 @@ import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -72,6 +74,12 @@ public class CustomRabbitAutoConfiguration {
         });
         rabbitTemplate.setMessageConverter(messageConverter());
         return rabbitTemplate;
+    }
+
+    @Bean
+    @ConditionalOnClass(value = {RabbitTemplate.class})
+    public RabbitServiceImpl rabbitService() {
+        return new RabbitServiceImpl();
     }
 
 }
