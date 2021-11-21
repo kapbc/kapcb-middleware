@@ -1,5 +1,8 @@
 package com.kapcb.framework.middleware.service;
 
+import com.kapcb.framework.common.page.Page;
+import org.springframework.data.domain.PageRequest;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -362,4 +365,21 @@ public interface IRedisService {
      * @return boolean
      */
     boolean updateListByIndex(String key, Long index, Object value);
+
+    /**
+     * search key in redis
+     *
+     * @param pattern String
+     * @return List<String>
+     */
+    List<String> scan(String pattern);
+
+    /**
+     * find by page in redis
+     *
+     * @param patternKey String
+     * @param page       Page
+     * @return List<String>
+     */
+    List<String> findKeysForPage(String patternKey, Page page);
 }

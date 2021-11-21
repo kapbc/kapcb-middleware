@@ -1,16 +1,25 @@
 package com.kapcb.framework.middleware.service.impl;
 
+import cn.hutool.core.util.PageUtil;
+import com.kapcb.framework.common.page.Page;
 import com.kapcb.framework.middleware.service.IRedisService;
+import io.jsonwebtoken.lang.Assert;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisConnectionUtils;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -745,4 +754,67 @@ public class RedisServiceImpl implements IRedisService {
         }
     }
 
+    /**
+     * @param pattern String
+     * @return
+     */
+    @Override
+    public List<String> scan(String pattern) {
+        Assert.hasLength(pattern, "scan pattern can not be null or empty");
+        log.info("scan pattern is : {}", pattern);
+        ScanOptions scanOptions = ScanOptions.scanOptions().match(pattern).build();
+        RedisConnectionFactory connectionFactory = redisTemplate.getConnectionFactory();
+        RedisConnection connection = Objects.requireNonNull(connectionFactory).getConnection();
+        Cursor<byte[]> cursor = connection.scan(scanOptions);
+        List<String> result = new ArrayList<>();
+        while (cursor.hasNext()) {
+            result.add(new String(cursor.next()));
+        }
+        releaseRedisConnection(connection, connectionFactory);
+        return result;
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param patternKey String
+     * @param page       Page
+     * @return List<String>
+     */
+    @Override
+    public List<String> findKeysForPage(String patternKey, Page page) {
+        ScanOptions options = ScanOptions.scanOptions().match(patternKey).build();
+        RedisConnectionFactory connectionFactory = redisTemplate.getConnectionFactory();
+        RedisConnection connection = Objects.requireNonNull(connectionFactory).getConnection();
+        Cursor<byte[]> cursor = connection.scan(options);
+        List<String> result = new ArrayList<>((int) page.getPageSize());
+        int tempIndex = 0;
+        int start = PageUtil.getStart((int) page.getPageNum(), (int) page.getPageSize());
+        int end = PageUtil.getEnd((int) page.getPageNum(), (int) page.getPageSize());
+        while (cursor.hasNext()) {
+            if (tempIndex >= start && tempIndex < end) {
+                result.add(new String(cursor.next()));
+                tempIndex++;
+                continue;
+            }
+
+            // 获取到满足条件的数据后,就可以退出了
+            if (tempIndex >= end) {
+                break;
+            }
+            tempIndex++;
+            cursor.next();
+        }
+        releaseRedisConnection(connection, connectionFactory);
+        return result;
+    }
+
+
+    private static void releaseRedisConnection(RedisConnection connection, RedisConnectionFactory connectionFactory) {
+        try {
+            RedisConnectionUtils.releaseConnection(connection, connectionFactory, false);
+        } catch (Exception e) {
+            log.error("release redis connection error, error message is : {}", e.getMessage());
+        }
+    }
 }
