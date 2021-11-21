@@ -1,17 +1,26 @@
 package com.kapcb.framework.middleware.lock.impl;
 
 import com.kapcb.framework.middleware.lock.ILock;
+import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RedissonClient;
 
 /**
- * <a>Title: RedissonLockServiceImpl </a>
+ * <a>Title: RedissonLock </a>
  * <a>Author: Kapcb <a>
- * <a>Description: RedissonLockServiceImpl <a>
+ * <a>Description: RedissonLock <a>
  *
  * @author Kapcb
  * @version 1.0.0
  * @date 2021/11/21 14:56
  */
-public class RedissonLockService implements ILock {
+@Slf4j
+public class RedissonLock implements ILock {
+
+    private static RedissonClient redissonClient;
+
+    public void setRedissonClient(RedissonClient redissonClient) {
+        RedissonLock.redissonClient = redissonClient;
+    }
 
     @Override
     public boolean lock(String key, String value, int seconds) {

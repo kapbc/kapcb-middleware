@@ -1,6 +1,6 @@
 package com.kapcb.framework.middleware.annotation;
 
-import com.kapcb.framework.middleware.configuration.DistributedLockConfiguration;
+import com.kapcb.framework.middleware.configuration.RedissonConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;
@@ -19,6 +19,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.PARAMETER)
-@Import(value = DistributedLockConfiguration.class)
-public @interface EnableDistributedLockService {
+@Import(value = RedissonConfiguration.class)
+public @interface EnableRedissonLock {
 }

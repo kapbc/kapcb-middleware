@@ -11,7 +11,7 @@ import com.kapcb.framework.middleware.lock.ILock;
  * @version 1.0.0
  * @date 2021/11/21 14:54
  */
-public class RedisLuaLockService implements ILock {
+public class RedisLuaLock implements ILock {
 
     @Override
     public boolean lock(String key, String value, int seconds) {

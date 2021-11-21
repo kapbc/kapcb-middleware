@@ -1,9 +1,9 @@
 package com.kapcb.framework.middleware.configuration;
 
 import com.kapcb.framework.middleware.lock.ILock;
-import com.kapcb.framework.middleware.lock.impl.RedisLuaLockService;
-import com.kapcb.framework.middleware.lock.impl.RedissonLockService;
-import com.kapcb.framework.middleware.lock.impl.ZooKeeperLockService;
+import com.kapcb.framework.middleware.lock.impl.RedisLuaLock;
+import com.kapcb.framework.middleware.lock.impl.RedissonLock;
+import com.kapcb.framework.middleware.lock.impl.ZooKeeperLock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 
@@ -21,17 +21,17 @@ public class DistributedLockConfiguration {
 
     @Bean("redisLuaLockService")
     public ILock redisLuaLockService() {
-        return new RedisLuaLockService();
+        return new RedisLuaLock();
     }
 
     @Bean("redissonLockService")
     public ILock redissonLockService() {
-        return new RedissonLockService();
+        return new RedissonLock();
     }
 
     @Bean("zooKeeperLockService")
     public ILock zooKeeperLockService() {
-        return new ZooKeeperLockService();
+        return new ZooKeeperLock();
     }
 
 }
