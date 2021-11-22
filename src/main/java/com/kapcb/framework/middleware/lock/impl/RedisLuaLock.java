@@ -4,6 +4,8 @@ import com.kapcb.framework.middleware.lock.ILock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import javax.annotation.PostConstruct;
+
 /**
  * <a>Title: RedisLuaLockServiceImpl </a>
  * <a>Author: Kapcb <a>
@@ -18,8 +20,14 @@ public class RedisLuaLock implements ILock {
 
     private static RedisTemplate<String, Object> redisTemplate;
 
+
     public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
         RedisLuaLock.redisTemplate = redisTemplate;
+    }
+
+    @PostConstruct
+    public void inti(){
+
     }
 
     @Override

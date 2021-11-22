@@ -77,9 +77,9 @@ public class RedissonConfiguration {
         return Redisson.create(config);
     }
 
-    @Bean(name = "redisLuaLock")
+    @Bean(name = "redissonLock")
     @ConditionalOnBean(RedissonClient.class)
-    public ILock redisLuaLock(RedissonClient redissonClient) {
+    public ILock redissonLock(RedissonClient redissonClient) {
         RedissonLock redissonLock = new RedissonLock();
         redissonLock.setRedissonClient(redissonClient);
         return redissonLock;
