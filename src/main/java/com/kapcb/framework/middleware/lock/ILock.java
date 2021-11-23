@@ -11,7 +11,7 @@ package com.kapcb.framework.middleware.lock;
  */
 public interface ILock {
 
-    boolean lock(String key, String value, int seconds);
+    boolean lock(String key, String value, int seconds) throws InterruptedException;
 
     boolean unlock(String key, String value);
 }
