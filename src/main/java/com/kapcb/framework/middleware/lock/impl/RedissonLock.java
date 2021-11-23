@@ -33,6 +33,12 @@ public class RedissonLock implements ILock {
         return lock;
     }
 
+    public void unlock(Lock lock){
+        lock.unlock();
+    }
+
+
+
     @Override
     public boolean lock(String key, String value, int seconds) throws InterruptedException {
         RLock lock = redissonClient.getLock(key);
