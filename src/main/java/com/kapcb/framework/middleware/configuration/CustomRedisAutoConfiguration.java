@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.kapcb.framework.common.constants.enums.StringPool;
 import com.kapcb.framework.middleware.properties.RedisConfigurationProperties;
 import com.kapcb.framework.middleware.service.IRedisService;
 import com.kapcb.framework.middleware.service.impl.RedisServiceImpl;
@@ -153,14 +154,15 @@ public class CustomRedisAutoConfiguration extends CachingConfigurerSupport {
      *
      * @return KeyGenerator
      */
+    @Bean
     @Override
     public KeyGenerator keyGenerator() {
         return (target, method, param) -> {
             Map<String, Object> container = new HashMap<>(2);
             Class<?> targetClass = target.getClass();
-            container.put("class", targetClass);
-            container.put("methodName", method.getName());
-            container.put("package", targetClass.getPackage());
+            container.put(StringPool.CLASS.value(), targetClass);
+            container.put(StringPool.METHOD_NAME.value(), method.getName());
+            container.put(StringPool.PACKAGE.value(), targetClass.getPackage());
             for (int i = 0; i < param.length; i++) {
                 container.put(String.valueOf(i), param[i]);
             }
