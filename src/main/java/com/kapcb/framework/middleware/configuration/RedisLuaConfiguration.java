@@ -26,4 +26,5 @@ public class RedisLuaConfiguration {
         redisLuaLock.setRedisTemplate(redisTemplate);
         return redisLuaLock;
     }
+
 }
