@@ -29,24 +29,22 @@ public class RateLimiterOperation extends LimiterOperation<RateLimiter> {
 
     public static class Builder extends LimiterOperation.Builder {
 
-        private double pps;
+        private double qps;
 
-        public double getPps() {
-            return this.pps;
+        public double getQps() {
+            return this.qps;
         }
 
-        public void setPps() {
-            this.pps = pps;
+        public void setQps(double qps) {
+            this.qps = qps;
         }
 
         @Override
         public LimiterOperation build() {
             Map<String, Object> customerArgument = new HashMap<>(2);
-            customerArgument.put("qps", this.pps);
+            customerArgument.put("qps", this.qps);
             this.customerArgument(customerArgument);
             return new RateLimiterOperation(this);
         }
     }
-
-
 }
