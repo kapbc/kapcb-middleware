@@ -1,4 +1,4 @@
-package com.kapcb.framework.middleware.annotation;
+package com.kapcb.framework.middleware.parser;
 
 import com.kapcb.framework.middleware.limiter.Limiter;
 import com.kapcb.framework.middleware.operation.LimiterOperation;

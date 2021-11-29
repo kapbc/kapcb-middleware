@@ -1,4 +1,4 @@
-package com.kapcb.framework.middleware.limiter.rate;
+package com.kapcb.framework.middleware.rate;
 
 import com.kapcb.framework.middleware.limiter.LimiterManager;
 import com.kapcb.framework.middleware.operation.LimiterOperation;
