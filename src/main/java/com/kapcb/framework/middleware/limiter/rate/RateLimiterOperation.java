@@ -3,6 +3,9 @@ package com.kapcb.framework.middleware.limiter.rate;
 import com.kapcb.framework.middleware.limiter.LimiterManager;
 import com.kapcb.framework.middleware.operation.LimiterOperation;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * <a>Title: RateLimiterOperation </a>
  * <a>Author: Kapcb <a>
@@ -21,7 +24,28 @@ public class RateLimiterOperation extends LimiterOperation<RateLimiter> {
 
     @Override
     public Class<? extends LimiterManager<RateLimiter>> getDefaultLimiterManagerClass() {
-        return null;
+        return RateLimiterManager.class;
+    }
+
+    public static class Builder extends LimiterOperation.Builder {
+
+        private double pps;
+
+        public double getPps() {
+            return this.pps;
+        }
+
+        public void setPps() {
+            this.pps = pps;
+        }
+
+        @Override
+        public LimiterOperation build() {
+            Map<String, Object> customerArgument = new HashMap<>(2);
+            customerArgument.put("qps", this.pps);
+            this.customerArgument(customerArgument);
+            return new RateLimiterOperation(this);
+        }
     }
 
 
