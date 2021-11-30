@@ -15,8 +15,6 @@ import org.springframework.aop.support.AbstractBeanFactoryPointcutAdvisor;
  */
 public class BeanFactoryLimiterOperationSourceAdvisor extends AbstractBeanFactoryPointcutAdvisor {
 
-    private
-
     @Override
     public Pointcut getPointcut() {
         return null;
