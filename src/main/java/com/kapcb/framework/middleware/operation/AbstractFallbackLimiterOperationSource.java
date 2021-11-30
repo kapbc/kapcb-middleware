@@ -1,7 +1,6 @@
 package com.kapcb.framework.middleware.operation;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.core.MethodClassKey;
 import org.springframework.util.ClassUtils;
@@ -40,16 +39,20 @@ public abstract class AbstractFallbackLimiterOperationSource implements LimiterO
         if (Objects.equals(method.getDeclaringClass(), Object.class)) {
             return null;
         } else {
-            Object limiterKey = this.getLimiterKey(method, clazz);
-            Collection<LimiterOperation> limiterOperations = this.ATTRIBUTE_CACHE.get(limiterKey);
-            if (limiterOperations != null) {
-                return limiterOperations != NULL_CACHING_ATTRIBUTE ? limiterOperations : null;
+            Object cacheKey = this.getLimiterKey(method, clazz);
+            Collection<LimiterOperation> cached = this.ATTRIBUTE_CACHE.get(cacheKey);
+            if (cached != null) {
+                return cached != NULL_CACHING_ATTRIBUTE ? cached : null;
             } else {
-
+                Collection<LimiterOperation> cachedOperation = this.computeLimiterOperations(method, clazz);
+                if (cachedOperation != null) {
+                    this.ATTRIBUTE_CACHE.put(cacheKey, cachedOperation);
+                } else {
+                    this.ATTRIBUTE_CACHE.put(cacheKey, NULL_CACHING_ATTRIBUTE);
+                }
+                return cachedOperation;
             }
         }
-
-        return null;
     }
 
     private Collection<LimiterOperation> computeLimiterOperations(Method method, Class<?> clazz) {
