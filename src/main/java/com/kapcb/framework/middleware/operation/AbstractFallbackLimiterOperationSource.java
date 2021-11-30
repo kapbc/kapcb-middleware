@@ -2,9 +2,12 @@ package com.kapcb.framework.middleware.operation;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.core.MethodClassKey;
+import org.springframework.util.ClassUtils;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -39,12 +42,43 @@ public abstract class AbstractFallbackLimiterOperationSource implements LimiterO
         } else {
             Object limiterKey = this.getLimiterKey(method, clazz);
             Collection<LimiterOperation> limiterOperations = this.ATTRIBUTE_CACHE.get(limiterKey);
-            if (CollectionUtils.isNotEmpty(limiterOperations)) {
+            if (limiterOperations != null) {
+                return limiterOperations != NULL_CACHING_ATTRIBUTE ? limiterOperations : null;
+            } else {
 
             }
         }
 
         return null;
+    }
+
+    private Collection<LimiterOperation> computeLimiterOperations(Method method, Class<?> clazz) {
+        if (this.allowPublicMethodOnly() && !Modifier.isPublic(clazz.getModifiers())) {
+            return null;
+        } else {
+            Method mostSpecificMethod = AopUtils.getMostSpecificMethod(method, clazz);
+            Collection<LimiterOperation> limiterOperations = this.findLimiterOperations(mostSpecificMethod);
+            if (limiterOperations != null) {
+                return limiterOperations;
+            } else {
+                limiterOperations = this.findLimiterOperations(mostSpecificMethod.getDeclaringClass());
+                if (limiterOperations != null && ClassUtils.isUserLevelMethod(method)) {
+                    return limiterOperations;
+                } else {
+                    if (mostSpecificMethod != method) {
+                        limiterOperations = this.findLimiterOperations(method);
+                        if (limiterOperations != null) {
+                            return limiterOperations;
+                        }
+                        limiterOperations = this.findLimiterOperations(method.getDeclaringClass());
+                        if (limiterOperations != null && ClassUtils.isUserLevelMethod(method)) {
+                            return limiterOperations;
+                        }
+                    }
+                }
+                return null;
+            }
+        }
     }
 
     protected Object getLimiterKey(Method method, Class<?> clazz) {
