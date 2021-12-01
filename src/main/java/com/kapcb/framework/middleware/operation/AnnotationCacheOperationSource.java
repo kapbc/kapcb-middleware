@@ -43,4 +43,5 @@ public class AnnotationCacheOperationSource extends AbstractFallbackLimiterOpera
     protected Collection<LimiterOperation> findLimiterOperations(Class<?> clazz) {
         return null;
     }
+
 }
