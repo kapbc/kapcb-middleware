@@ -1,5 +1,7 @@
 package com.kapcb.framework.middleware.limiter;
 
+import com.kapcb.framework.middleware.behavior.Behavior;
+
 import java.util.Map;
 
 /**
@@ -12,11 +14,11 @@ import java.util.Map;
  * @date 2021/11/28 13:51
  * @since 1.0
  */
-public interface Limiter {
+public interface Limiter extends Behavior {
 
-    String getLimiterName();
+    String getName();
 
-    boolean limit(Object limitKey, Map<String, Object> args);
+    boolean limit(Object key, Map<String, Object> args);
 
-    void unLimit(Object limitKey, Map<String, Object> args);
+    void unLimit(Object key, Map<String, Object> args);
 }

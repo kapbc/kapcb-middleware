@@ -18,7 +18,7 @@ import java.util.Objects;
  */
 public abstract class RateLimiter implements Limiter {
 
-    public abstract boolean acquire(Object limitKey, double qps);
+    public abstract boolean acquire(Object key, double qps);
 
     public abstract String getName();
 
@@ -28,18 +28,18 @@ public abstract class RateLimiter implements Limiter {
     }
 
     @Override
-    public boolean limit(Object limitKey, Map<String, Object> args) {
+    public boolean limit(Object key, Map<String, Object> args) {
         double qps;
         if (MapUtils.isNotEmpty(args) || Objects.isNull(args.get("qps"))) {
             qps = 1;
         } else {
             qps = (double) args.get("qps");
         }
-        return acquire(limitKey, qps);
+        return acquire(key, qps);
     }
 
     @Override
-    public void unLimit(Object limitKey, Map<String, Object> args) {
+    public void unLimit(Object key, Map<String, Object> args) {
         // by order of awesome kapcb
         // do nothing
     }
