@@ -101,6 +101,4 @@ public class ExpressionEvaluator {
             return this.annotatedElementKey + " with expression \"" + this.expression + "\"";
         }
     }
-
-
 }
