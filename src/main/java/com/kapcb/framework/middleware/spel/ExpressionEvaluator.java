@@ -6,6 +6,9 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.util.Assert;
 
+import java.lang.reflect.AnnotatedElement;
+import java.util.Map;
+
 /**
  * <a>Title: ExpressionEvaluator </a>
  * <a>Author: Kapcb <a>
@@ -35,12 +38,50 @@ public class ExpressionEvaluator {
         return this.spelExpressionParser;
     }
 
-    protected ParameterNameDiscoverer getParameterNameDiscoverer(){
+    protected ParameterNameDiscoverer getParameterNameDiscoverer() {
         return this.parameterNameDiscoverer;
     }
 
-    protected Expression getExpression(){
+    protected Expression getExpression(Map<ExpressionKey, Expression> cache) {
 
     }
+
+    protected static class ExpressionKey implements Comparable<ExpressionEvaluator.ExpressionKey> {
+
+        private final AnnotatedElement annotatedElement;
+        private final String expression;
+
+        protected ExpressionKey(String expression, AnnotatedElement annotatedElement) {
+            Assert.notNull(expression, "expression must not be null");
+            Assert.notNull(annotatedElement, "annotated element must not be null");
+            this.expression = expression;
+            this.annotatedElement = annotatedElement;
+        }
+
+        @Override
+        public int compareTo(ExpressionEvaluator.ExpressionKey other) {
+            int result = this.annotatedElement.toString().compareTo(other.annotatedElement.toString());
+            if (result == 0) {
+                result = this.expression.compareTo(other.expression);
+            }
+            return result;
+        }
+
+        @Override
+        public int hashCode() {
+            return super.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return super.equals(obj);
+        }
+
+        @Override
+        public String toString() {
+            return super.toString();
+        }
+    }
+
 
 }
