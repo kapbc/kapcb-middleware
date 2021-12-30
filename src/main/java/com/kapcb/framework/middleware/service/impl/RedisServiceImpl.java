@@ -817,4 +817,5 @@ public class RedisServiceImpl implements IRedisService {
             log.error("release redis connection error, error message is : {}", e.getMessage());
         }
     }
+
 }

@@ -13,8 +13,6 @@ import com.kapcb.framework.middleware.lock.ILock;
  */
 public class ZooKeeperLock implements ILock {
     
-    
-
     @Override
     public boolean lock(String key, String value, int seconds) {
         return false;
@@ -24,6 +22,5 @@ public class ZooKeeperLock implements ILock {
     public boolean unlock(String key, String value) {
         return false;
     }
-    
-    
+
 }
